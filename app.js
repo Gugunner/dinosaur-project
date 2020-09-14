@@ -97,9 +97,10 @@
         this.height = height;
         this.weight = weight;
         this.diet = diet;
+        this.imageUrl = "human.png";
     };
     // Use IIFE to get human data from form
-    function getHumanDatFromForm() {
+    function getHumanDataFromForm() {
         const name = document.getElementById("name").value;
         const heightFeet = document.getElementById("feet").value;
         const heightInches = document.getElementById("inches").value;
@@ -166,31 +167,67 @@
         };
         return diets[humanDiet];
     };
+    const shuffleDinoObjectsArray = () => {
+        let dinoObjectsCurrentIndex = dinoObjects.length;
+        while (dinoObjectsCurrentIndex !== -1) {
+            dinoObjectsCurrentIndex -= 1;
+            const randIndex = Math.floor(Math.random()*dinoObjectsCurrentIndex);
+            const currentDinoObject = dinoObjects[dinoObjectsCurrentIndex];
+            dinoObjects[dinoObjectsCurrentIndex] = dinoObjects[randIndex];
+            dinoObjects[randIndex] = currentDinoObject;
+        }
+    };
+    /**
+     *
+     * @param {obj} - Dino Instance or Human Instance
+     */
+    const addGridItems = (obj) => {
+        const imagesPath = "images/";
+        const gridNode = document.getElementById("grid");
+        const divNode = document.createElement("DIV");
+        divNode.className = "grid-item";
+        const speciesTitleNode = document.createElement("H3");
+        const speciesTitleTextNode = document.createTextNode(obj.hasOwnProperty("species") ? obj.species : obj.name);
+        speciesTitleNode.appendChild(speciesTitleTextNode);
+        divNode.appendChild(speciesTitleNode);
+        if(obj.hasOwnProperty("name")) {
+            const imageNode = document.createElement("IMG");
+            imageNode.src = imagesPath+obj.imageUrl;
+            imageNode.alt = "Human image";
+            divNode.appendChild(imageNode);
+        } else if(obj.hasOwnProperty("species") && obj.species.toLowerCase() === "pigeon") {
+            const imageNode = document.createElement("IMG");
+            imageNode.src = imagesPath+obj.getImageURL();
+            imageNode.alt = `${obj.species} image`;
+            divNode.appendChild(imageNode);
+            const factNode = document.createElement("p");
+            const factTextNode = document.createTextNode(obj.fact);
+            factNode.appendChild(factTextNode);
+            divNode.appendChild(factNode);
+        } else {
+            const imageNode = document.createElement("IMG");
+            imageNode.src = imagesPath+obj.getImageURL();
+            imageNode.alt = `${obj.species} image`;
+            divNode.appendChild(imageNode);
+        }
+        gridNode.appendChild(divNode);
+    };
     // Generate Tiles for each Dino in Array
-        function generateTiles () {
-            const formNode = document.getElementById("dino-compare");
-            formNode.style.display = "none";
-            const gridNode = document.getElementById("grid");
-            console.log("Dino Objects", dinoObjects);
-            console.log("Human Object", human);
-            [...dinoObjects, human].forEach(obj => {
-                const divNode = document.createElement("DIV");
-                divNode.className = "tile";
-                const speciesTitleNode = document.createElement("H4");
-                const speciesTitleTextNode = document.createTextNode(obj.hasOwnProperty("species") ? obj.species : obj.name);
-                speciesTitleNode.appendChild(speciesTitleTextNode);
-                divNode.appendChild(speciesTitleNode);
-                gridNode.appendChild(divNode);
-            });
-        };
         // Add tiles to DOM
-
     // Remove form from screen
+    function generateTiles () {
+        const formNode = document.getElementById("dino-compare");
+        formNode.style.display = "none";
+        shuffleDinoObjectsArray();
+        dinoObjects.slice(0,4).forEach(obj => addGridItems(obj));
+        addGridItems(human);
+        dinoObjects.slice(4).forEach(obj => addGridItems(obj));
+    };
 
 // On button click, prepare and display infographic
     (function createCompareButtonAction() {
         document.getElementById("btn").addEventListener("click", () => {
-            getHumanDatFromForm();
+            getHumanDataFromForm();
             generateTiles();
         });
 })();

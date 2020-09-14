@@ -172,13 +172,3 @@ select {
     display: block;
     font-size: 0.7em;
 }
-
-.tile {
-    width: 40px;
-    height: 200px;
-    background-color: azure;
-    opacity: 0.6;
-    border: 1px solid black;
-    padding: 16px;
-    box-sizing: border-box;
-}
