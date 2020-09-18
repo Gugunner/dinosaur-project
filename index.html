@@ -11,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="app.css" rel="stylesheet">
     <!-- Link to app.js with defer till HTML render -->
+    <script src="utils.js"></script>
     <script defer src="app.js"></script>
 </head>
 <body>
@@ -22,12 +23,12 @@
      Form to get user input
     <form id="dino-compare">
         <div class="form-container">
-            <p>Name:</p>
+            <p>* Name:</p>
             <input id="name" class="form-field__full" type="name" name="name">
             <p>Height</p>
-            <label>Feet: <input id="feet" class="form-field__short" type="number" name="feet"></label>
+            <label>* Feet: <input id="feet" class="form-field__short" type="number" name="feet"></label>
             <label>inches: <input id="inches" class="form-field__short" type="number" name="inches"></label>
-            <p>Weight:</p>
+            <p>* Weight:</p>
             <label><input id="weight" class="form-field__full" type="number" name="weight">lbs</label>
             <p>Diet:</p>
             <select id="diet" class="form-field__full" name="diet">
@@ -39,6 +40,7 @@
         </div>
     </form>
     <!-- .grid to attach tiles to -->
+    <div id="reset"></div>
     <main id="grid"></main>
     <footer>
         <!-- Include information source -->

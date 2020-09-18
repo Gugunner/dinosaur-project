@@ -1,5 +1,13 @@
     let human;
     let dinoObjects = [];
+    const gridNode = document.getElementById("grid");
+    const formNode = document.getElementById("dino-compare");
+    const resetNode = document.getElementById("reset");
+    const nameNode = document.getElementById("name");
+    const heightFeetNode = document.getElementById("feet");
+    const heightInchesNode = document.getElementById("inches");
+    const weightNode = document.getElementById("weight");
+    const dietNode = document.getElementById("diet");
     // Create Dino Constructor
     /**
      *
@@ -30,14 +38,12 @@
         const randomLength = Math.ceil(Math.random()*6);
         while(newRandomFacts.length < randomLength) {
             const randNum = Math.floor(Math.random()*6);
-            console.log("Random Number",randNum);
             const newFact = dinoFacts[randNum];
             if(newRandomFacts.indexOf(newFact) === -1) {
                 newRandomFacts.push(newFact);
             }
         }
         newRandomFacts = newRandomFacts.map(newRandFact => ({type: newRandFact, value: this[newRandFact]}));
-        console.log(newRandomFacts);
         return newRandomFacts;
     };
     /**
@@ -62,16 +68,16 @@
             }
         }
         let dinoData = [];
-        /**
-         *
-         * @returns {Promise<* | void>}
-         */
-        const getDinosaurData = function() {
-            return fetch('dino.json', request)
-                .then(response => response.ok ? response.json() : false)
-                .then(jsonResponse => jsonResponse)
-                .catch(e => alert("Dinosaur Data not found"));
-        };
+         /**
+          *
+          * @returns {Promise<* | void>}
+          */
+         const getDinosaurData = function() {
+             return fetch('dino.json', request)
+                 .then(response => response.ok ? response.json() : false)
+                 .then(jsonResponse => jsonResponse)
+                 .catch(e => alert("Dinosaur Data not found"));
+         };
         getDinosaurData().then(data => {
             dinoData = data["Dinos"].map(dino => new Dino(dino));
             dinoData[0].getRandomFacts();
@@ -100,57 +106,45 @@
     };
     // Use IIFE to get human data from form
     function getHumanDataFromForm() {
-        const name = document.getElementById("name").value;
-        const heightFeet = document.getElementById("feet").value;
-        const heightInches = document.getElementById("inches").value;
-        const weight = document.getElementById("weight").value;
-        const diet = document.getElementById("diet").value;
-        /**
-         *
-         * @returns {Number}
-         */
-        const convertHeightAllToInches = () => {
-            return (+heightFeet*12) + (+heightInches);
-        }
-        human = new Human(name, convertHeightAllToInches(), +weight, diet);
+        human = new Human(name, (+heightFeetNode.value*12) + (+heightInchesNode.value), +weightNode.value, dietNode.value);
     };
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
-    const compareHeight = (humanHeight, dinoHeight) => {
+    Human.prototype.compareHeight = function(dinoHeight) {
         let compareText = "";
-        compareText += humanHeight === dinoHeight ?
-            "Are you even human?" :
-            humanHeight > dinoHeight ?
-            "Are you even human?" :
-            "All is well, the dinosaur is taller than you.";
-        return { type: "compareHeight", value: compareText };
+        compareText += this.height === dinoHeight ?
+            "You have the same height" :
+            this.height > dinoHeight ?
+            "You are taller than the dinosaur." :
+            "The dinosaur is taller than you by " + (dinoHeight - this.height) + " inches";
+        return compareText;
     };
     // Create Dino Compare Method 2
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    const compareWeight = (humanWeight, dinoWeight) => {
+    Human.prototype.compareWeight = function(dinoWeight) {
         let compareText = "";
-        compareText += humanWeight === dinoWeight ?
+        compareText += this.weight === dinoWeight ?
             "You weight the same" :
-            humanWeight > dinoWeight ?
-            "You should be on a diet":
-            "You are thin compared to this dinosaur.";
-        return { type: "compareWeight", value: compareText };
+            this.weight > dinoWeight ?
+            "You weight more than the dinosaur":
+            "The dinosaur is heavier than you by " + (dinoWeight - this.weight) + " lbs";
+        return compareText;
     };
     // Create Dino Compare Method 3
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    const compareDiet = (humanDiet, dinoDiet) => {
-        let compareText = "";
-        const diets = {
-            "herbavor": dinoDiet === "herbavor" ? compareText += "You would compete for food." :
-                compareText += "He probably would have put you in his diet.",
+    Human.prototype.compareDiet = function(dinoDiet) {
+        const compareText = {
+            "herbavor": dinoDiet === "herbavor" ?
+                "You would compete for food as you are both herbavor." :
+                "This dinosaur would probably put you in his carnivor diet .",
             "omnivore": dinoDiet === "hervabor" ?
-                compareText += "You would probably put him in your foor with a salad" :
-                compareText += "Oh oh, it's eat or be eaten",
+                "Dinosaur is hervabor, you are omnivore" :
+                "You could eat anything while this carnivor dinoasaur would eat you.",
             "carnivor": dinoDiet === "hervabor" ?
-                compareText += "This dinosaur would be part of what you eat" :
-                compareText += "Hmmm let the hunger games begin!"
+                "This dinosaur is hervabor, it could be part of what you eat" :
+                "Oh my two carnivores, let the hunger games begin!"
         };
-        return { type: "compareDiet", value: diets[humanDiet.toLowerCase()] } ;
+        return compareText[this.diet.toLowerCase()];
     };
     const shuffleDinoObjectsArray = () => {
         let dinoObjectsCurrentIndex = dinoObjects.length;
@@ -174,11 +168,11 @@
      */
     const createCompareFacts = ({value, type}) => {
         const compareMethods = {
-            "diet": compareDiet(human.diet, value),
-            "height": compareHeight(human.height, value),
-            "weight": compareWeight(human.weight, value)
+            "diet": human.compareDiet(value),
+            "height": human.compareHeight(value),
+            "weight": human.compareWeight(value)
         }
-        return addFactParragraphNodes(compareMethods[type].value);
+        return addFactParragraphNodes(compareMethods[type]);
     };
     const addGridItems = (obj) => {
         const imagesPath = "images/";
@@ -217,18 +211,49 @@
     // Generate Tiles for each Dino in Array
         // Add tiles to DOM
     // Remove form from screen
-    function generateTiles () {
-        const formNode = document.getElementById("dino-compare");
+    function generateTiles() {
         formNode.style.display = "none";
         shuffleDinoObjectsArray();
         dinoObjects.slice(0,Math.ceil(dinoObjects.length / 2)).forEach(obj => addGridItems(obj));
         addGridItems(human);
         dinoObjects.slice(Math.ceil(dinoObjects.length / 2)).forEach(obj => addGridItems(obj));
     };
+    function generateForm(buttonNode) {
+        gridNode.innerHTML = "";
+        formNode.style.display = "block";
+        buttonNode.remove();
+    };
+    const createResetButtonAction = () => {
+        const buttonNode = document.createElement("BUTTON");
+        const buttonTextNode = document.createTextNode("RESET");
+        buttonNode.appendChild(buttonTextNode);
+        resetNode.appendChild(buttonNode);
+        buttonNode.addEventListener("click",() => generateForm(buttonNode));
+    };
+
+    const validateInputs = () => {
+        return !checkEmptyField(nameNode.value) &&
+            onlyAlphabetic(nameNode.value) &&
+            stringHasCertainMinimumLength(nameNode.value, 3) &&
+            !checkEmptyField(heightFeetNode.value) &&
+            hasPositiveValue(heightFeetNode.value) &&
+            !checkEmptyField(weightNode.value) &&
+            hasPositiveValue(weightNode.value);
+    };
+
 // On button click, prepare and display infographic
     (function createCompareButtonAction() {
         document.getElementById("btn").addEventListener("click", () => {
-            getHumanDataFromForm();
-            generateTiles();
+            if(validateInputs()) {
+                console.log("Valid");
+                getHumanDataFromForm();
+                generateTiles();
+                createResetButtonAction();
+            } else {
+                alert("Please fill out all required fields with valid values (*)");
+            }
         });
     })();
+
+
+
