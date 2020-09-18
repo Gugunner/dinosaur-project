@@ -53,7 +53,8 @@
       <updated>1599924202951</updated>
       <workItem from="1599924203999" duration="1841000" />
       <workItem from="1599948157484" duration="7479000" />
-      <workItem from="1600045550639" duration="2275000" />
+      <workItem from="1600045550639" duration="3390000" />
+      <workItem from="1600216553623" duration="6307000" />
     </task>
     <servers />
   </component>
@@ -73,9 +74,9 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1042" y="297" width="604" height="548" key="find.popup" timestamp="1599950311907">
+    <state x="1042" y="297" width="609" height="548" key="find.popup" timestamp="1600390915140">
       <screen x="0" y="23" width="1792" height="1097" />
     </state>
-    <state x="1042" y="297" width="604" height="548" key="find.popup/0.23.1792.1097@0.23.1792.1097" timestamp="1599950311907" />
+    <state x="1042" y="297" width="609" height="548" key="find.popup/0.23.1792.1097@0.23.1792.1097" timestamp="1600390915140" />
   </component>
 </project>

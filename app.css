@@ -104,16 +104,20 @@ p {
 }
 
 .grid-item p {
-    background: rgba(000,000,000, .3);
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
-    padding: 0.8em 0.8em 1.8em;
+    padding: 0.4em 0.4em 0.8em;
     margin:0;
     box-sizing: border-box;
     font-size: 1.2em;
     font-weight: 600;
     color: #fff;
+}
+
+.grid-item ul {
+    list-style: none;
+    padding: 0;
 }
 
 /* Form Styles */
