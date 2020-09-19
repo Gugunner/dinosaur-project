@@ -13,7 +13,6 @@ const onlyAlphabetic = (words) => {
  * @returns {boolean}
  */
 const checkEmptyField = (words) => {
-    console.log("Words", words);
     return words.length === 0 || words === '';
 };
 /**
@@ -31,6 +30,5 @@ const stringHasCertainMinimumLength = (words, minLength) => {
  * @returns {boolean}
  */
 const hasPositiveValue = (value) => {
-    console.log("Value", value);
     return +value > 0;
 };

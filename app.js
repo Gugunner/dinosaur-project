@@ -106,7 +106,7 @@
     };
     // Use IIFE to get human data from form
     function getHumanDataFromForm() {
-        human = new Human(name, (+heightFeetNode.value*12) + (+heightInchesNode.value), +weightNode.value, dietNode.value);
+        human = new Human(nameNode.value, (+heightFeetNode.value*12) + (+heightInchesNode.value), +weightNode.value, dietNode.value);
     };
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
@@ -137,7 +137,7 @@
             "herbavor": dinoDiet === "herbavor" ?
                 "You would compete for food as you are both herbavor." :
                 "This dinosaur would probably put you in his carnivor diet .",
-            "omnivore": dinoDiet === "hervabor" ?
+            "omnivor": dinoDiet === "hervabor" ?
                 "Dinosaur is hervabor, you are omnivore" :
                 "You could eat anything while this carnivor dinoasaur would eat you.",
             "carnivor": dinoDiet === "hervabor" ?
@@ -188,6 +188,7 @@
         if(obj.hasOwnProperty("name")) {
             imageNode.src = imagesPath+obj.imageUrl;
             imageNode.alt = "Human Image";
+            listNode.appendChild(addFactParragraphNodes(human.name))
         }
         if(obj.hasOwnProperty("species")) {
             const randomFacts = obj.getRandomFacts();
@@ -230,7 +231,6 @@
         resetNode.appendChild(buttonNode);
         buttonNode.addEventListener("click",() => generateForm(buttonNode));
     };
-
     const validateInputs = () => {
         return !checkEmptyField(nameNode.value) &&
             onlyAlphabetic(nameNode.value) &&
@@ -240,12 +240,10 @@
             !checkEmptyField(weightNode.value) &&
             hasPositiveValue(weightNode.value);
     };
-
 // On button click, prepare and display infographic
     (function createCompareButtonAction() {
         document.getElementById("btn").addEventListener("click", () => {
             if(validateInputs()) {
-                console.log("Valid");
                 getHumanDataFromForm();
                 generateTiles();
                 createResetButtonAction();
